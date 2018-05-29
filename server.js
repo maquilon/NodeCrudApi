@@ -22,7 +22,7 @@ var port = process.env.PORT || 8080;        // set our port
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
 
-// middleware to use for all requests
+// Middleware to use for all requests
 // We can do validations to make sure that everything coming from a request is 
 // safe and sound. We can throw errors here in case something is wrong. We can 
 // do some extra logging for analytics or any statistics we'd like to keep.
@@ -43,35 +43,21 @@ router.use(function (req, res, next) {
 // Routes for our API will happen here
 
 
-// get all the albums (accessed at GET http://localhost:8080/api/albums)
+// on routes that end in /albums
+// ----------------------------------------------------
 router.route('/albums')
+    // get all the albums (accessed at GET http://localhost:8080/api/albums)
     .get(function (req, res) {
         Album.find(function (err, albums) {
             if (err)
                 res.send(err);
             res.json(albums)
         });
-    });
+    })
 
 
 
-
-// get the album with that id (accessed at GET http://localhost:8080/api/albums/:album_id)
-router.route('/albums/:album_id')
-    .get(function (req, res) {
-        Album.findById(req.params.album_id, function (err, album) {
-            if (err)
-                res.send(err);
-                
-            res.json(album)
-        });
-    });
-
-
-
-
-// create a album (accessed at POST http://localhost:8080/api/albums
-router.route('/albums')
+    // create a album (accessed at POST http://localhost:8080/api/albums
     .post(function (req, res) {
         var album = new Album();    // Create a new instance of the Album model
         album.labelName = req.body.labelName;
@@ -89,9 +75,37 @@ router.route('/albums')
 
 
 
-
-// update the album with this id (accessed at PUT http://localhost:8080/api/albums/:album_id)
+// on routes that end in /albums/:album_id
+// ----------------------------------------------------
 router.route('/albums/:album_id')
+    // get the album with that id (accessed at GET http://localhost:8080/api/albums/:album_id)
+    .get(function (req, res) {
+        Album.findById(req.params.album_id, function (err, album) {
+            if (err)
+                res.send(err);
+
+            res.json(album)
+        });
+    })
+
+
+
+    // delete the album with this id (accessed at DELETE http://localhost:8080/api/albums/:album_id)
+    .delete(function (req, res) {
+        Album.remove({
+            _id: req.params.album_id
+        }
+            , function (err, album) {
+                if (err)
+                    res.send(err);
+
+                res.json({ message: "Successfully deleted" })
+            });
+    })
+
+
+
+    // update the album with this id (accessed at PUT http://localhost:8080/api/albums/:album_id)
     .put(function (req, res) {
         Album.findById(req.params.album_id, function (err, album) {
             if (err)
