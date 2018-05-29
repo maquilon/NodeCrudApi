@@ -1,7 +1,6 @@
 // BASE SETUP
 // =============================================================================
 var mongoose = require('mongoose');
-//mongoose.connect('mongodb://node:node@novus.modulusmongo.net:27017/Iganiq8o'); // connect to our database
 mongoose.connect('mongodb://localhost:27017/labels')
 
 var Album = require('./app/models/album');
@@ -42,7 +41,7 @@ router.use(function (req, res, next) {
 
 // Routes for our API will happen here
 
-
+// ----------------------------------------------------
 // on routes that end in /albums
 // ----------------------------------------------------
 router.route('/albums')
@@ -68,13 +67,13 @@ router.route('/albums')
             if (err)
                 res.send(err);
 
-            res.json({ message: 'Album created!' })
+            res.json({ message: 'Album created!', album })
         });
     });
 
 
 
-
+// ----------------------------------------------------
 // on routes that end in /albums/:album_id
 // ----------------------------------------------------
 router.route('/albums/:album_id')
@@ -119,7 +118,7 @@ router.route('/albums/:album_id')
                 if (err)
                     res.send(err);
 
-                res.json({ message: 'Album updated!' })
+                res.json({ message: 'Album updated!', album })
             })
         })
     })
@@ -128,6 +127,8 @@ router.route('/albums/:album_id')
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
+
+
 
 // START THE SERVER
 // =============================================================================
